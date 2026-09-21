@@ -7,7 +7,7 @@
 use <../hw_pockets.scad>
 
 // [snug, close, loose, gap]
-margins = [.06, .1, .2, .35];
+margins = [.06, .12, .24, .35];
 
 // text like "M2.5", "M4" for metric, "I4", "I1/4" for imperial
 size = "M5";
@@ -17,6 +17,9 @@ type = 0; //[0: SHC, 1: BHC, 2: hex, 3: square, 4: tapped, 5: flathead, 6: custo
 
 // for all
 Lshaft = 3.5;
+
+// for all
+stance_chamfer = 3;
 
 // for all
 sink = 6; //.1
@@ -46,5 +49,5 @@ module _end_cust_() {}
 $fa = 2;
 $fs = 0.1;
 
-#neg_hardware(size, type, Lshaft, sink=sink, slot=slot, capture=capture, minor_access=minor_access, major_access=major_access, access_draft=12, washer=washer, rel_thread=rel_thread, margins=margins);
+#neg_hardware(size, type, Lshaft, sink=sink, slot=slot, capture=capture, minor_access=minor_access, major_access=major_access, access_draft=12, washer=washer, rel_thread=rel_thread, stancecone=stance_chamfer, margins=margins);
 vit_hardware(size, type, Lshaft, washer=washer, TLshaft=TLshaft);

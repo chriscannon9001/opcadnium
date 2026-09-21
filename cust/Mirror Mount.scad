@@ -102,13 +102,16 @@ Attach_washer = true;
 Attach_size = "M4"; 
 
 // Thickness under base attach hardware
-Attach_thick = 2;
+Attach_thick = 4;
 
 // Move attachment hardware from the center of the right angle
 Attach_bias = -1.5;
 
 // Length, width, height of right angle base
 RA_base_dimensions = [5, 16, 18];
+
+// A chamfer cone that widens stance
+Stance_chamfer = 3;
 
 /* [Clamp type base] */
 
@@ -338,7 +341,7 @@ module hardware_attach() {
     if (Base_Type == 0) {
         translate([0, -Thick_gap/2-Thick_back/2-Base_length/2+Attach_bias, -Height/2-Overhang2])
             translate([0, 0, -.01])
-            neg_hardware(Attach_size, Attach_type, Attach_thick+.01, sink=-Base_height, washer=Attach_washer, margins=margins);
+            neg_hardware(Attach_size, Attach_type, Attach_thick+.01, sink=-Base_height, washer=Attach_washer, stancecone=Stance_chamfer, margins=margins);
     } else if (Base_Type == 1) {
         translate([0, -Thick_back-Thick_gap/2, 0])
             rotate([-90, 0, 0])

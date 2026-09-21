@@ -22,7 +22,7 @@ Height = 8.5;
 
 /* [Top Hardware] */
 even_top = 0;
-pitch_top = 20;
+pitch_top = 20.5;
 N_top = [0, 0];
 size_top = "M4";
 Bshaft_top = 0.8;
@@ -35,7 +35,7 @@ TLshaft_top = 8;
 
 /* [Bottom Hardware] */
 even_bot = 1;
-pitch_bot = 25;
+pitch_bot = 25.4;
 N_bot = [0, 0];
 size_bot = "M3";
 Bshaft_bot = 1.4;

@@ -17,7 +17,7 @@ Clone OptoSCAD from git into the libraries folder. Same goes for NopSCADlib (dep
 * stock of screws and nuts (e.g. M3, M4, M6)
 * stock of springs (e.g. 6x20x.4 mm and 8x20x.8mm)
 * (optional) chop saw
-* (optional) metal stock, e.g. 6mm dia (for cages) and 12.7mm dia rod or tubes (for posts) 
+* (optional) metal stock, e.g. 6mm dia rod (for cages) and 12.7mm dia rod or tubes (for posts) 
 * (optional) drill press and taps, i.e. if you want to thread solid rod posts (not required)
 
 ## Getting started
@@ -34,13 +34,19 @@ Load customizer from OpenSCAD/cust/*.scad to start customizing a design.
 |-------------------------------|----|----|-------|--------------|
 | cust/Adapter Plates.scad        |   |   |       | |
 | cust/Adapter Right Angle.scad   |   |   |       | |
-| cust/Post Holders.scad          | X |   | untested| [thingiverse](https://www.thingiverse.com/thing:7243131) |
+| cust/Post Holders.scad          | X |   |       | [thingiverse](https://www.thingiverse.com/thing:7243131) |
 | cust/Post Right Angle Clamp.scad| X |   | untested | |
 | cust/Cage Plate.scad            | X | X | needs work | [thingiverse](https://www.thingiverse.com/thing:7243140) |
 | cust/Mirror Mount.scad          | X | X | also on HeNe | [thingiverse](https://www.thingiverse.com/thing:7243140) |
 | cust/Lens Mount, Focal.scad     |   | X | untested | |
 | cust/Lens Mount, XY.scad        |   |   | in planning | |
-| cust/Integrating Sphere.scad    |   |   | unreleased; coming soon | |
+| cust/Integrating Sphere.scad    | X | X | untested | |
+
+## Calibration
+
+Many printers can probably start printing and the default margins will work.
+
+
 
 ## Filaments
 
@@ -55,7 +61,7 @@ Coincidentally or not, that's the same as sorting by increasing glass transition
 
 (Where does PA belong, perhaps between PETG and ASA?)
 
-Some say composite filaments are more stable but my impression is the effect of filament filler is rather weak; PA-CF has higher creep and is also softer than PC.
+Some say composite filaments are more stable but my impression is the effect of filament filler is rather weak; PA-CF has higher creep and is also softer than PC, though it may be tougher in other ways.
 
 ## Project Status
 
@@ -66,7 +72,6 @@ I'm working on plans for test beds for benchmarks.
 ***Planned :***
 
 * Lens Mount
-* Integrating Sphere
 * Robotics
 
 ## Hardware Library

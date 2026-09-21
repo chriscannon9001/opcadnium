@@ -10,9 +10,13 @@ vitamins = true;
 // [snug, close, loose, gap]
 margins = [.06, .12, .24, .35];
 
-// Enter nominal tube OD; actual ID = ID + 2*close
+// Enter nominal tube diameter
 ID = 12.7;
 
+// tolerance on tube diameter
+ID_tol = 0.3;
+
+// outer diameter of post holder
 OD = 25;
 
 // Hint: hexed prints easier on its side
@@ -27,8 +31,11 @@ lockscrew = "M5";
 
 lockscrewtype = 2; //[2: hex, 3: square, 4: tapped]
 
+// angle [deg], 0 = aligned w cam
+lockscreworientation = 20;
+
 // angle [deg], 0 = up
-lockscreworientation = 90;
+locknutorientation = 90;
 
 // Thickness substrate for base screw
 Base_thick = 12;
@@ -56,7 +63,7 @@ use <MCAD/regular_shapes.scad>
 $fa=1;
 $fs=.1;
 
-rID = ID + 2*margins[1];
+//rID = ID + 2*ID_tol;
 w1 = 14;
 w2 = min(OD*cos(30), 18);
 
@@ -64,9 +71,17 @@ lspec = hw_hex(hw_getspec(lockscrew));
 lthick0 = lspec[1] + margins[3] + 4;
 lockthick = max(lthick0, (OD-ID)/2);
 
+module coord_lscrew() {
+    translate([Cam, 0])
+    rotate(lockscreworientation)
+    translate([-Cam, 0])
+    children();
+}
+
 module LockBrace() {
     h = Height - w2/2;
-    x = Cam - ID/2 - 2*margins[1];
+    x = Cam - ID/2 - 2*ID_tol;
+    coord_lscrew()
     translate([x, 0, h]) rotate([0, -90, 0]) {
         linear_extrude(lockthick, scale=w1/w2)
         square(w2, center=true);
@@ -75,9 +90,10 @@ module LockBrace() {
 
 module LockHW() {
     h = Height - w2/2;
-    x = Cam - ID/2 - margins[1] - 1;
-    translate([Cam, 0, h]) rotate([0, -90, 0]) rotate([0, 0, -lockscreworientation])
-    neg_hardware(lockscrew, lockscrewtype, ID/2+2, minor_access=OD/2, margins=margins, capture=true, sink=lockthick);
+    x = Cam - ID/2 - 2*ID_tol - 1;
+    coord_lscrew()
+    translate([Cam, 0, h]) rotate([0, -90, 0]) rotate([0, 0, -locknutorientation])
+    neg_hardware(lockscrew, lockscrewtype, ID/2+ID_tol+2, minor_access=OD/2, margins=margins, capture=true, sink=lockthick);
 }
 
 module body() {
@@ -91,7 +107,7 @@ module body() {
         //translate([0, 0, 6]) cylinder(h=Height, d=rID);
         translate([0, 0, 6])
         linear_extrude(Height)
-        sketch_precision_bore(ID, margins[1], 180);
+        sketch_precision_bore(ID, ID_tol, 180);
         // stabilizing bore relief
         //translate([rID/4+margins[3], 0, 6]) linear_extrude(Height) square([rID/2,rID*.5], center=true);
     }
@@ -142,6 +158,7 @@ if (vitamins) {
     #vit_hardware(basescrew, basescrewtype, Base_min, TLshaft=12, washer=basescrewwasher);
     h = Height - w2/2;
     x = Cam - ID/2 - margins[1] - 1;
+    coord_lscrew()
     translate([x, 0, h]) rotate([0, -90, 0]) {
         #vit_hardware(lockscrew, lockscrewtype, 1, TLshaft=3);
         translate([0, 0, 12])

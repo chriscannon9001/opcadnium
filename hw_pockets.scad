@@ -8,15 +8,8 @@
  */
 
 use <./hwlookup.scad>
+include <./margins.scad>
 
-// margins, radial in mm:
-// [snug, close, loose, gap]
-// snug - may or may not require force
-// close - shouldn't require force, but shouldn't be sloppy
-// loose - better a little sloppy than risk contact
-// gap - plenty of clearance for movement
-// def_margins are probably appropriate for most FDM
-def_margins = [.06, .12, .24, .35];
 
 // uses a hull to slotify children on x axis
 // (need to be careful because hull can change shapes)
@@ -39,6 +32,24 @@ module yslotify(width) {
     }
 }
 
+// Creates a cone (or chamfer) around
+// a screw bore. This is needed to widen
+// the stance anytime a single screw is
+// used to secure opto-mechanics. Such
+// as a mirror mount screwed to the end
+// of a post.
+// chamfer - radial chamfer size, added to bore
+// bore - diameter of the screw bore
+// Lshaft - length of the shaft bored through the base material, used to set a max chamfer height
+module stance_cone(chamfer, bore, Lshaft) {
+    if (chamfer > 0) {
+        d1 = 2*chamfer + bore;
+        h = min(Lshaft - .8, chamfer * .7);
+        translate([0, 0, -.05])
+        cylinder(h=h+.05, d1=d1, d2=bore);
+    }
+}
+
 // neg_boreSHC(); create a pocket
 //   designed to counterbore socket-head-cap screws
 //   origin is centered at bottom of shaft
@@ -50,7 +61,7 @@ module yslotify(width) {
 // margins - see above;
 //      loose around sides, gap over top
 //      close around sides of shaft
-module neg_boreSHC(size, Lshaft, sink=0, washer=false, slot=0, margins=def_margins) {
+module neg_boreSHC(size, Lshaft, sink=0, washer=false, slot=0, stancecone=0, margins=def_margins) {
     spec = hw_getspec(size);
     shaft = hw_shaft(spec) + 2*margins[1];
     shc = hw_shc(spec);
@@ -66,6 +77,9 @@ module neg_boreSHC(size, Lshaft, sink=0, washer=false, slot=0, margins=def_margi
     // shaft
     xslotify(slot)
     linear_extrude(Lshaft+.12) circle(d=shaft);
+    // stance cone
+    xslotify(slot)
+    stance_cone(stancecone, shaft, Lshaft);
     }
 }
 
@@ -104,7 +118,7 @@ module vit_SHC(size, Lshaft, washer=false, TLshaft=0) {
 // margins - see above;
 //      loose around sides, gap over top
 //      close around sides of shaft
-module neg_boreBHC(size, Lshaft, sink=0, washer=false, slot=0, margins=def_margins) {
+module neg_boreBHC(size, Lshaft, sink=0, washer=false, slot=0, stancecone=0, margins=def_margins) {
     spec = hw_getspec(size);
     shaft = hw_shaft(spec) + 2*margins[1];
     bhc = hw_bhc(spec);
@@ -120,6 +134,9 @@ module neg_boreBHC(size, Lshaft, sink=0, washer=false, slot=0, margins=def_margi
     // shaft
     xslotify(slot)
     linear_extrude(Lshaft+.12) circle(d=shaft);
+    // stance cone
+    xslotify(slot)
+    stance_cone(stancecone, shaft, Lshaft);
     }
 }
 
@@ -157,7 +174,7 @@ module vit_BHC(size, Lshaft, washer=false, TLshaft=0) {
 // margins - see above;
 //      loose around sides, gap over top
 //      close around sides of shaft
-module neg_flathead(size, Lshaft, sink=0, slot=0, margins=def_margins) {
+module neg_flathead(size, Lshaft, sink=0, slot=0, stancecone=0, margins=def_margins) {
     spec = hw_getspec(size);
     shaft = hw_shaft(spec) + 2*margins[1];
     head = hw_flathead(spec) + 2*margins[2];
@@ -175,6 +192,9 @@ module neg_flathead(size, Lshaft, sink=0, slot=0, margins=def_margins) {
     // shaft
     xslotify(slot)
     linear_extrude(Lshaft+.12) circle(d=shaft);
+    // stance cone
+    xslotify(slot)
+    stance_cone(stancecone, shaft, Lshaft);
     }
 }
 
@@ -204,10 +224,12 @@ module vit_flathead(size, Lshaft, TLshaft=0) {
 // size - e.g. "M3", "I4" or "I1/4"
 // Lshaft - length of shaft
 // rel_thread - relative reduction of shaft (default 0.15)
-module neg_tapped(size, Lshaft, rel_thread=0.15) {
+module neg_tapped(size, Lshaft, stancecone=0, rel_thread=0.15) {
     spec = hw_getspec(size);
     shaft = hw_shaft(spec) * (1 - rel_thread);
     cylinder(h=Lshaft, d=shaft);
+    // stance cone
+    stance_cone(stancecone, shaft, Lshaft);
 }
 
 // vit_tapped(): create a vitamin
@@ -244,7 +266,7 @@ module access_slot(length, w1, angle, height) {
 // margins - see above;
 //      snug around sides of hex, loose over top
 //      close around sides of shaft
-module neg_hex(size, Lshaft, sink=0, capture=false, slot=0, minor_access=0, major_access=0, access_draft=12, margins=def_margins) {
+module neg_hex(size, Lshaft, sink=0, capture=false, slot=0, minor_access=0, major_access=0, access_draft=12, stancecone=0, margins=def_margins) {
     spec = hw_getspec(size);
     shaft = hw_shaft(spec) + 2*margins[1];
     hex = hw_hex(spec);
@@ -274,6 +296,9 @@ module neg_hex(size, Lshaft, sink=0, capture=false, slot=0, minor_access=0, majo
     // bottom shaft
     xslotify(slot)
     linear_extrude(Lshaft+.12) circle(d=shaft);
+    // stance cone
+    xslotify(slot)
+    stance_cone(stancecone, shaft, Lshaft);
     // top shaft
     xslotify(slot)
     if (Tshaft>0) {
@@ -314,7 +339,7 @@ module vit_hex(size, Lshaft, TLshaft=0) {
 // margins - see above;
 //      snug around sides of hex, loose over top
 //      close around sides of shaft
-module neg_square(size, Lshaft, sink=0, capture=false, slot=0, minor_access=0, major_access=0, access_draft=12, margins=def_margins) {
+module neg_square(size, Lshaft, sink=0, capture=false, slot=0, minor_access=0, major_access=0, access_draft=12, stancecone=0, margins=def_margins) {
     spec = hw_getspec(size);
     shaft = hw_shaft(spec) + 2*margins[1];
     squ = hw_squ(spec);
@@ -342,6 +367,9 @@ module neg_square(size, Lshaft, sink=0, capture=false, slot=0, minor_access=0, m
     // bottom shaft
     xslotify(slot)
     linear_extrude(Lshaft+.12) circle(d=shaft);
+    // stance cone
+    xslotify(slot)
+    stance_cone(stancecone, shaft, Lshaft);
     // top shaft
     xslotify(slot)
     if (Tshaft>0) {
@@ -371,7 +399,7 @@ module vit_square(size, Lshaft, capture=false, TLshaft=0) {
 
 
 
-module neg_custom(size, Lshaft, bore, sink=0, slot=0, margins=def_margins) {
+module neg_custom(size, Lshaft, bore, sink=0, slot=0, stancecone=0, margins=def_margins) {
     spec = hw_getspec(size);
     shaft = hw_shaft(spec) + 2*margins[1];
     xslotify(slot)
@@ -380,26 +408,29 @@ module neg_custom(size, Lshaft, bore, sink=0, slot=0, margins=def_margins) {
         xslotify(slot)
         translate([0, 0, Lshaft]) linear_extrude(sink) circle(d=bore);
     }
+    // stance cone
+    xslotify(slot)
+    stance_cone(stancecone, shaft, Lshaft);
 }
 
 
 //
 // type - 0: SHC, 1: BHC, 2: hex, 3: square, 4: tapped, 5: flathead, 6: custom
-module neg_hardware(size, type, Lshaft, sink=0, slot=0, minor_access=0, major_access=0, capture=false, access_draft=12, washer=false, rel_thread=0.15, margins=def_margins) {
+module neg_hardware(size, type, Lshaft, sink=0, slot=0, minor_access=0, major_access=0, capture=false, access_draft=12, washer=false, rel_thread=0.15, stancecone=0, margins=def_margins) {
     if (type == 0) {
-        neg_boreSHC(size, Lshaft, sink=sink, washer=washer, slot=slot, margins=margins);
+        neg_boreSHC(size, Lshaft, sink=sink, washer=washer, slot=slot, stancecone=stancecone, margins=margins);
     } else if (type == 1) {
-        neg_boreBHC(size, Lshaft, sink=sink, washer=washer, slot=slot, margins=margins);
+        neg_boreBHC(size, Lshaft, sink=sink, washer=washer, slot=slot, stancecone=stancecone, margins=margins);
     } else if (type == 2) {
-        neg_hex(size, Lshaft, sink=sink, capture=capture, slot=slot, minor_access=minor_access, major_access=major_access, access_draft=access_draft, margins=margins);
+        neg_hex(size, Lshaft, sink=sink, capture=capture, slot=slot, minor_access=minor_access, major_access=major_access, access_draft=access_draft, stancecone=stancecone, margins=margins);
     } else if (type == 3) {
-        neg_square(size, Lshaft, sink=sink, capture=capture, slot=slot, minor_access=minor_access, major_access=major_access, access_draft=access_draft, margins=margins);
+        neg_square(size, Lshaft, sink=sink, capture=capture, slot=slot, minor_access=minor_access, major_access=major_access, access_draft=access_draft, stancecone=stancecone, margins=margins);
     } else if (type == 4) {
-        neg_tapped(size, Lshaft+abs(sink), rel_thread=rel_thread);
+        neg_tapped(size, Lshaft+abs(sink), rel_thread=rel_thread, stancecone=stancecone);
     } else if (type == 5) {
-        neg_flathead(size, Lshaft, sink=sink, slot=slot, margins=margins);
+        neg_flathead(size, Lshaft, sink=sink, slot=slot, stancecone=stancecone, margins=margins);
     } else if (type == 6) {
-        neg_custom(size, Lshaft, minor_access, sink=sink, slot=slot);
+        neg_custom(size, Lshaft, minor_access, sink=sink, slot=slot, stancecone=stancecone);
     } else {
     }
 }

@@ -7,15 +7,8 @@
 
 use <NopSCADlib/vitamins/spring.scad>
 use <hw_pockets.scad>
-
-// margins, radial in mm:
-// [snug, close, loose, gap]
-// snug - may or may not require force
-// close - shouldn't require force, but shouldn't be sloppy
-// loose - better a little sloppy than risk contact
-// gap - plenty of clearance for movement
-// def_margins are probably appropriate for most FDM
-def_margins = [.06, .12, .24, .35];
+include <margins.scad>
+    
 
 // neg_collar_screwnut
 // Compressing or expanding a collar.
@@ -128,8 +121,18 @@ module thumb_knob(N, OD, dent_diameter, dent_proportion, thick, chamfer, angle_r
     }
 }
 
+// Cutouts for an adjuster; screw, spring, nut
+// screwsize - e.g. "M3" or "I8"
 // springspec - [OD, wire, free-length, N-coils]
-module neg_adjuster_screwnutspring(screwsize, springspec, typehead=0, typenut=2, washer=false, l_compressed=0, support_thick=2, access_length=0, overhead=5, margins=def_margins) {
+// typehead, typenut - 0: SHC, 1: BHC, 2: hex, 3: square, 4: tapped 5: flathead
+// washer - (bool) include washer under head
+// l_compressed - compressed length of spring
+// support_thick - amount of shaft under head, nut
+// support_thick_nut - for nut, 0 if same as head
+// access_length - length of nut access pocket
+// overhead - bore over head and nut
+module neg_adjuster_screwnutspring(screwsize, springspec, typehead=0, typenut=2, washer=false, l_compressed=0, support_thick=2, support_thick_nut=0, access_length=0, overhead=5, margins=def_margins) {
+    sthick_nut = (support_thick_nut>0) ? support_thick_nut : support_thick;
     mar_gap = margins[3];
     mar_loose = margins[2];
     capture = access_length>0;
@@ -144,11 +147,13 @@ module neg_adjuster_screwnutspring(screwsize, springspec, typehead=0, typenut=2,
     neg_hardware(screwsize, typehead, support_thick, sink=overhead, minor_access=access_length, washer=washer, capture=capture, margins=margins);
     // nut
     rotate([180, 0, 0]) translate([0, 0, Lc/2])
-    neg_hardware(screwsize, typenut, support_thick, sink=overhead, minor_access=access_length, washer=washer, capture=capture, margins=margins);
+    neg_hardware(screwsize, typenut, sthick_nut, sink=overhead, minor_access=access_length, washer=washer, capture=capture, margins=margins);
 }
 
-module vit_adjuster_screwnutspring(screwsize, springspec, typehead=0, typenut=2, washer=false,  l_compressed=0, support_thick=2) {
+// Vitamins that go along with neg_adjuster_screwnut
+module vit_adjuster_screwnutspring(screwsize, springspec, typehead=0, typenut=2, washer=false,  l_compressed=0, support_thick=2, support_thick_nut=0) {
     // calculations
+    sthick_nut = (support_thick_nut>0) ? support_thick_nut : support_thick;
     Lc = (l_compressed>0) ? l_compressed : spring_length(springspec);
     h = Lc+2*(support_thick+5);
     //spring
@@ -162,7 +167,7 @@ module vit_adjuster_screwnutspring(screwsize, springspec, typehead=0, typenut=2,
     translate([0, 0, -Lc/2])
         rotate([180, 0, 0])
         color("silver")
-        vit_hardware(screwsize, typenut, support_thick, washer=washer, TLshaft=support_thick+Lc/2);
+        vit_hardware(screwsize, typenut, sthick_nut, washer=washer, TLshaft=sthick_nut+Lc/2);
 }
 
 // 2D sketch only, holding a rod with relief.
@@ -176,6 +181,64 @@ module sketch_precision_bore(dia, tol, rotation=0) {
         // smaller relief focusing stress on 2 points
         translate([-OD1/5, 0])
         circle(d=dia/1.4);
+    }
+}
+
+// Cutouts for a prism mount.
+// Coordinate w.r.t. center of prism mount.
+// dim - [x, y, z] dimensions of prism
+// xpad - padding on +x side of prism
+// ypad - padding on +y side of prism
+// thick - if thicker than dim[2], then add clear-aperture bores top and bottom
+// ss_rad - radial length of setscrew cutout w.r.t. center coordinate
+// ss_size - size of setscrew e.g. "M4" or "I8"
+// ss_nuttype - type of nut for setscrew, 2: hex, 3: square, 4: tapped
+// ss_lshaft - min length of shaft between prism pocket and nut
+// flange - (default 0) add flange behind prism (-z side)
+module neg_prismmount(dim, thick, xpad, ypad, ss_rad, ss_size, ss_nuttype=2, ss_lshaft=2, flange=0, margins=def_margins) {
+    clear = sqrt(dim[0]^2 + dim[1]^2)+3*margins[3];
+    clear1 = sqrt(dim[0]^2 + dim[1]^2)-3*.71*margins[3];
+    clear2 = sqrt((dim[0]+2*xpad)^2 + (dim[1]+2*ypad)^2);
+    dz = (flange>0) ? flange : 0;
+    x = dim[0];
+    y = dim[1];
+    z = dim[2];
+    union() {
+    // prism itself
+    translate([0, 0, dz/2])
+    linear_extrude(z, center=true)
+    polygon([[-x/2, -y/2],
+        [-x/2, y/2+ypad],
+        [x/2+xpad, y/2+ypad],
+        [x/2+xpad, -y/2]]);
+    // through flange
+    if (flange>0) {
+        translate([0, 0, (-dz-z)/2])
+        linear_extrude(dz)
+        square([x-1, y-1], center=true);
+    }
+    // relief at prism edge
+    translate([0, 0, dz/2])
+    translate([-x/2, -y/2])
+    cylinder(h=z, r=1.5*margins[3], center=true);
+    // clear aperture (tob/bottom)
+    tl = dim[2] + dz;
+    if (thick>z) {
+        translate([0, 0, tl/2-.05])
+        cylinder(h=(thick-tl)/2+.1, d=clear2);
+        rotate([180, 0, 0])
+        translate([0, 0, tl/2-.05])
+        cylinder(h=(thick-tl)/2+.1, d=clear1);
+    }
+    // pockets for setscrews
+    translate([0, 0, dz/2]) {
+        rotate([-90, 0, 0])
+        rotate(-90)
+        neg_hardware(ss_size, ss_nuttype, max(clear/2+.8,y/2+ypad+ss_lshaft), sink=ss_rad-y/2, capture=true, minor_access=thick/2, margins=margins);
+        rotate([0, 90, 0])
+        rotate(180)
+        neg_hardware(ss_size, ss_nuttype, max(clear/2+.8,x/2+xpad+ss_lshaft), sink=ss_rad-x/2, capture=true, minor_access=thick/2, margins=margins);
+    }
     }
 }
 

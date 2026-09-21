@@ -62,8 +62,11 @@ Setscrew_position = 90;
 // [Length, Width, Depth, Gap]
 Flex = [22, 16, 12, 2.9];
 
-// total length of flex
+// total length including arms
 L_flexTL = 36;
+
+// I.e. 2x nozzle diameter
+Thick_flex = .8;
 
 rh_flex = true;
 
@@ -122,7 +125,7 @@ difference() {
             [-span/2, -s*L_flexTL/2]]);
         // flexure
         thick3 = (L_flexTL - Flex[0])/2;
-        flexure_translation1(Flex[0], Flex[1], Flex[2], thick1=0.8, thick2=2, thick3=thick3, bias=0);
+        flexure_translation1(Flex[0], Flex[1], Flex[2], thick1=Thick_flex, thick2=2, thick3=thick3, bias=0);
         // connect flexure across the gap
         for (j = [-1,1]) {
             y = j*s*(Flex[0]/2+thick3/2+.25);
@@ -151,6 +154,6 @@ difference() {
 
 if (vitamins) {
     coord_actuator()
-    vit_adjuster_screwnutspring(Screw_dz, Spring_spec, typehead=0, typenut=2, washer=true,  l_compressed=compressedLength, support_thick=Supportthick_dz);
+    vit_adjuster_screwnutspring(Screw_dz, Spring_spec, typehead=0, typenut=Nuttype_dz, washer=true,  l_compressed=compressedLength, support_thick=Supportthick_dz);
 }
 
