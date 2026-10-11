@@ -226,9 +226,9 @@ module adjuster_kit() {
         rotate(theta+hene_theta0)
         translate([(R1+R2)/2, 0]) {
             translate([0, 0, -Thick_gap/2-Thick_back-.01])
-            neg_boreSHC(hene_screw, 1, slot=R2-R1, sink=-Thick_back, washer=hene_washer, margins=margins);
+            neg_SHC(hene_screw, 1, slot=R2-R1, sink=-Thick_back, washer=hene_washer, margins=margins);
             translate([0, 0, Thick_gap/2-.01])
-            neg_boreSHC(hene_screw, Thick_front+.1, slot=R2-R1, sink=-.1, margins=margins);
+            neg_SHC(hene_screw, Thick_front+.1, slot=R2-R1, sink=-.1, margins=margins);
         }
     } else if (Base_Type == 4) {
         // cage attachment

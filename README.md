@@ -1,5 +1,5 @@
 # opcadnium
-OPtical-CAD-nium: customizable (parametric) 3d printable opto-mechanics. (Formerly known as OptoSCAD.)
+OPto-mech-CAD-nium - for making customizable (parametric) 3d printable opto-mechanics. (Formerly known as OptoSCAD.)
 
 Plastic is always going to be second-rate for opto-mech, but it actually can do many jobs so long it's not expected to carry a heavy load, or meet interferometer precision.
 
@@ -18,15 +18,21 @@ Clone opcadnium from git into the libraries folder. Same goes for NopSCADlib (de
 * stock of springs (e.g. 6x20x.4 mm and 8x20x.8mm)
 * (optional) chop saw
 * (optional) metal stock, e.g. 6mm dia rod (for cages) and 12.7mm dia rod or tubes (for posts) 
-* (optional) drill press and taps, i.e. if you want to thread solid rod posts (not required)
+* (optional) drill press and taps, i.e. for threading solid rod posts (not required)
+
+## Screenshots
+
+![Cage Plate](screenshots/opcadnium_cage_plate.png)
+
+![Mirror Mount](screenshots/opcadnium_mirror_mount.png)
 
 ## Getting started
 
-The folder opcadnium/render has some example .stl files you can open in CAD or a slicer just to get a feel for some of the common variants.
+The folder opcadnium/render has .stl files ready to open in a slicer or CAD, populated with some common variants.
 
 See below under Project status to find links to Thingiverse, which offers 3d views of the same rendered .stl files.
 
-Load a customizer from opcadnium/cust/*.scad to start customizing a design.
+Load a customizer from opcadnium/cust/*.scad in OpenSCAD to start customizing a design.
 
 ***Catalog of (mostly) working mechanics:***
 
@@ -92,7 +98,7 @@ translate([0, -7, 0]) {
     vit_hex("M3", 1, TLshaft=8);
 }
 translate([0, -7, -6]) rotate([180, 0, 0]) {
-    %neg_boreSHC("M3", 1.0, sink=3);
+    %neg_SHC("M3", 1.0, sink=3);
     vit_SHC("M3", 1);
 }
 

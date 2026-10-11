@@ -26,5 +26,5 @@ $fa=2;
 $fs=.1;
 translate([10, 0, 0]) #neg_hex(size, 2, minor_access=5);
 translate([-10, 0, 0]) #neg_tapped(size, 6);
-translate([0, 10, 0]) #neg_boreSHC(size, 2, washer=with_washer, slot=5);
-translate([0, -10, 0]) #neg_boreBHC(size, 2, washer=with_washer);
+translate([0, 10, 0]) #neg_SHC(size, 2, washer=with_washer, slot=5);
+translate([0, -10, 0]) #neg_BHC(size, 2, washer=with_washer);

@@ -9,7 +9,7 @@ translate([0, -7, 0]) {
     vit_hex("M3", 1, TLshaft=8);
 }
 translate([0, -7, -6]) rotate([180, 0, 0]) {
-    %neg_boreSHC("M3", 1.0, sink=3);
+    %neg_SHC("M3", 1.0, sink=3);
     vit_SHC("M3", 1);
 }
 

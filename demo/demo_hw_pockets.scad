@@ -24,6 +24,9 @@ stance_chamfer = 3;
 // for all
 sink = 6; //.1
 
+// for all
+plate = 0; //.1
+
 // for any except tapped
 slot = 0; //.1
 
@@ -49,5 +52,6 @@ module _end_cust_() {}
 $fa = 2;
 $fs = 0.1;
 
-#neg_hardware(size, type, Lshaft, sink=sink, slot=slot, capture=capture, minor_access=minor_access, major_access=major_access, access_draft=12, washer=washer, rel_thread=rel_thread, stancecone=stance_chamfer, margins=margins);
+#neg_hardware(size, type, Lshaft, sink=sink, plate=plate, slot=slot, capture=capture, minor_access=minor_access, major_access=major_access, access_draft=12, washer=washer, rel_thread=rel_thread, stancecone=stance_chamfer, margins=margins);
+color("silver")
 vit_hardware(size, type, Lshaft, washer=washer, TLshaft=TLshaft);
