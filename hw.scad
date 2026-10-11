@@ -1,5 +1,5 @@
 // Easily inherit all the hardware tools
-// include <OptoSCAD/hw.scad>
+// include <opcadnium/hw.scad>
 
 use <./hwlookup.scad>
 use <./hw_pockets.scad>

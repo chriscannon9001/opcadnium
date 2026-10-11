@@ -11,7 +11,7 @@
 
 include <../hw.scad>
 
-render = 1; //[0:bottom, 1:top, 2:whole]
+Render = 1; //[0:bottom, 1:top, 2:whole]
 
 ID = 80;
 wall = 2.5;
@@ -19,7 +19,7 @@ wall = 2.5;
 N_closers = 3;
 
 // [OD, thick, walloffset, draftangle]
-closers = [9.5, 3, 3, 25];
+closers = [9.5, 3, 3, 30];
 
 closer_screw = "M3";
 
@@ -110,10 +110,10 @@ adapter3screwdepth = 3.5;
 
 module __Customizer_Limit__ () {}
 
-$fa = $preview? 5 : .5;
-$fs = $preview? 0.5: 0.1;
+$fa = $preview? 2.5 : .75;
+$fs = $preview? 0.5: 0.15;
 
-alpha = (render==2) ? 0.5 : 1.0;
+alpha = (Render==2) ? 0.5 : 1.0;
 OD = ID + wall*2;
 h_draft_closerbore = tan(closers[3]) * (closers[0] + closers[1]) / 2;
 Clamp_L_jaw = Clamp_jaw_dims[0];
@@ -293,7 +293,7 @@ color(alpha=alpha) difference() {
             port_shoulder(i);
         }
         // clamp, if called for
-        if ((base_hw_type == 3) && (render != 1)) {
+        if ((base_hw_type == 3) && (Render != 1)) {
             rotate(clamp_azi)
             translate([OD/2+clamp_dia/2, 0, -OD/4])
             rotate(-90)
@@ -315,9 +315,9 @@ color(alpha=alpha) difference() {
     
     // block off top or bottom
     d_TL = OD + closers[2]*2 + closers[0] + 10;
-    if (render==0) {
+    if (Render==0) {
         cylinder(h=OD/2+1, d=d_TL);
-    } else if (render==1) {
+    } else if (Render==1) {
         rotate([0, 180, 0]) cylinder(h=OD/2+1+dbot, d=d_TL);
     }
     

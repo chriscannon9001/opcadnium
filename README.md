@@ -1,5 +1,5 @@
-# OptoSCAD
-Parametric 3d Printable Opto-mechanics.
+# opcadnium
+OPtical-CAD-nium: customizable (parametric) 3d printable opto-mechanics. (Formerly known as OptoSCAD.)
 
 Plastic is always going to be second-rate for opto-mech, but it actually can do many jobs so long it's not expected to carry a heavy load, or meet interferometer precision.
 
@@ -9,7 +9,7 @@ This project is about opto-mech as fast and cheap as it can reasonably be.
 
 Install OpenSCAD, find your libraries folder.
 
-Clone OptoSCAD from git into the libraries folder. Same goes for NopSCADlib (dependency) [https://github.com/nophead/NopSCADlib](https://github.com/nophead/NopSCADlib).
+Clone opcadnium from git into the libraries folder. Same goes for NopSCADlib (dependency) [https://github.com/nophead/NopSCADlib](https://github.com/nophead/NopSCADlib).
 
 ## Hardware Requirements
 
@@ -22,11 +22,11 @@ Clone OptoSCAD from git into the libraries folder. Same goes for NopSCADlib (dep
 
 ## Getting started
 
-The folder OptoSCAD/render has some example .stl files you can open in CAD or a slicer just to get a feel for some of the common variants.
+The folder opcadnium/render has some example .stl files you can open in CAD or a slicer just to get a feel for some of the common variants.
 
 See below under Project status to find links to Thingiverse, which offers 3d views of the same rendered .stl files.
 
-Load customizer from OpenSCAD/cust/*.scad to start customizing a design.
+Load a customizer from opcadnium/cust/*.scad to start customizing a design.
 
 ***Catalog of (mostly) working mechanics:***
 
@@ -46,7 +46,7 @@ Load customizer from OpenSCAD/cust/*.scad to start customizing a design.
 
 Many printers can probably start printing and the default margins will work.
 
-
+It's a good idea to print a copy of our calibration check and make sure the screws/nuts you intend to use fit properly in the pockets.
 
 ## Filaments
 
@@ -76,12 +76,12 @@ I'm working on plans for test beds for benchmarks.
 
 ## Hardware Library
 
-There are other hardware libraries out there already, but OptoSCAD includes its own hardware library. Why do that? OptoSCAD's internal hw lib is aimed at forming negatives (pockets) for trapping nuts, counterboring screws (on the low level side) and forming screw/spring adjuster sets and other things (on the high level side), all with 3d printing in mind. Other libraries are more low-level.
+There are other hardware libraries out there already, but opcadnium includes its own hardware library. Why do that? opcadnium's internal hw lib is aimed at forming negatives (pockets) for trapping nuts, counterboring screws (on the low level side) and forming screw/spring adjuster sets and other things (on the high level side), all with 3d printing in mind. Other libraries are more low-level.
 
 Here is a brief demo snippet.
 
 ```
-include <OptoSCAD/hw.scad>
+include <opcadnium/hw.scad>
 
 $fa=2;
 $fs=.2;
@@ -105,8 +105,8 @@ translate([0, 7, 0]) {
 }
 ```
 
-![OptoSCAD demo_brief preview](screenshots/OptoSCAD_demo_brief_preview.png)
+![opcadnium demo_brief preview](screenshots/opcadnium_demo_brief_preview.png)
 
 ### More hardware lib demo
 
-Goto the folder OptoSCAD/demo and open of the demo files in OpenSCAD to see demonstrations in more detail. The files hw_pockets.scad and hw_features.scad and hwlookup.scad have additional usage documentation inline.
+Goto the folder opscadnium/demo and open of the demo files in OpenSCAD to see demonstrations in more detail. The files hw_pockets.scad and hw_features.scad and hwlookup.scad have additional usage documentation inline.
