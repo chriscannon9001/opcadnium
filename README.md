@@ -1,7 +1,9 @@
 # opcadnium
-OPto-mech-CAD-nium - for making customizable (parametric) 3d printable opto-mechanics. (Formerly known as OptoSCAD.)
+OPto-CAD-nium - quick library and customizers for parametric 3d printable opto-mechanics.
 
-Plastic is always going to be second-rate for opto-mech, but it actually can do many jobs so long it's not expected to carry a heavy load, or meet interferometer precision.
+(Formerly known as OptoSCAD.)
+
+Plastic is always going to be second-rate for opto-mech, but it actually can do many jobs so long it's not expected to carry too heavy a load or meet interferometer precision.
 
 This project is about opto-mech as fast and cheap as it can reasonably be.
 
@@ -34,12 +36,14 @@ See below under Project status to find links to Thingiverse, which offers 3d vie
 
 Load a customizer from opcadnium/cust/*.scad in OpenSCAD to start customizing a design.
 
-***Catalog of (mostly) working mechanics:***
+***Opto-mechanics catalog:***
 
 | Customizer                    |Post|Cage| Notes | Offsite Link |
 |-------------------------------|----|----|-------|--------------|
 | cust/Adapter Plates.scad        |   |   |       | |
 | cust/Adapter Right Angle.scad   |   |   |       | |
+| cust/Adapter Plate to Tube, Clamp.scad| | untested | | |
+| cust/Adapter Plate to Tube, Setscrew.scad| | untested | | |
 | cust/Post Holders.scad          | X |   |       | [thingiverse](https://www.thingiverse.com/thing:7243131) |
 | cust/Post Right Angle Clamp.scad| X |   | untested | |
 | cust/Cage Plate.scad            | X | X | needs work | [thingiverse](https://www.thingiverse.com/thing:7243140) |
@@ -52,7 +56,7 @@ Load a customizer from opcadnium/cust/*.scad in OpenSCAD to start customizing a 
 
 Many printers can probably start printing and the default margins will work.
 
-It's a good idea to print a copy of our calibration check and make sure the screws/nuts you intend to use fit properly in the pockets.
+But it's a good idea to print a copy of our calibration check and make sure the screws/nuts you intend to use fit properly in the pockets.
 
 ## Filaments
 
@@ -71,18 +75,22 @@ Some say composite filaments are more stable but my impression is the effect of 
 
 ## Project Status
 
-Bringing every form of opto-mech into the project would be a little ambitious.
+Bringing every form of opto-mech into the project would be a little ambitious. The majority of the opto-mech that belongs is represented already.
 
 I'm working on plans for test beds for benchmarks.
 
 ***Planned :***
 
-* Lens Mount
+* Lens Mount, XY
 * Robotics
 
 ## Hardware Library
 
-There are other hardware libraries out there already, but opcadnium includes its own hardware library. Why do that? opcadnium's internal hw lib is aimed at forming negatives (pockets) for trapping nuts, counterboring screws (on the low level side) and forming screw/spring adjuster sets and other things (on the high level side), all with 3d printing in mind. Other libraries are more low-level.
+There are other hardware libraries out there already, but opcadnium includes its own hardware library. Why?
+
+* [low level] Form negatives (pockets) for trapping nuts, counterboring screws, and allow quickly swapping metric and imperial types.
+* [higher level] Form screw/spring adjuster sets, collar clamps, and more
+* With 3d printing in mind.
 
 Here is a brief demo snippet.
 

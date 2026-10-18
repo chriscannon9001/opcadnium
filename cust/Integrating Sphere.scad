@@ -11,20 +11,30 @@
 
 include <../hw.scad>
 
-Render = 1; //[0:bottom, 1:top, 2:whole]
+Render = 2; //[0:bottom, 1:top, 2:whole]
 
+// internal diameter of the sphere
 ID = 80;
+
+// thinnest wall portions
 wall = 2.5;
 
+// altitude angle at top/bottom seam
+alt_seam = 0;
+
+// number of closer screws
 N_closers = 3;
 
 // [OD, thick, walloffset, draftangle]
 closers = [9.5, 3, 3, 30];
 
+// size of closer screws e.g. "M4" or "I8"
 closer_screw = "M3";
 
+// type of nut bottom side of closers
 closer_nuttype = 4; //[2: hex, 3: square, 4: tapped]
 
+// make space for washer at closer head
 closer_washer = false;
 
 closer_headtype = 0; //[0: SHC, 1: BHC, 5: flathead]
@@ -52,7 +62,10 @@ pshoulder_draft = 25;
 bmode = [-1, 0, 0];
 
 // thickness of baffles
-bthick = 1;
+bthick = 1.0; //0.1
+
+// thickness of screens which cover over the port (print first layer)
+screen = [0, 0, 0]; //[0:0.05:2]
 
 /* [Base Mounting] */
 // type of mounting hardware to table
@@ -113,6 +126,7 @@ module __Customizer_Limit__ () {}
 $fa = $preview? 2.5 : .75;
 $fs = $preview? 0.5: 0.15;
 
+dz_seam = sin(alt_seam)*ID/2;
 alpha = (Render==2) ? 0.5 : 1.0;
 OD = ID + wall*2;
 h_draft_closerbore = tan(closers[3]) * (closers[0] + closers[1]) / 2;
@@ -120,7 +134,10 @@ Clamp_L_jaw = Clamp_jaw_dims[0];
 Clamp_W_jaw = Clamp_jaw_dims[1];
 Clamp_gap = Clamp_jaw_dims[2];
 
+function r_lip(i) = sqrt((ID/2)^2 - (pID[i]/2)^2);
+
 module coord_closer(i) {
+    translate([0, 0, dz_seam])
     rotate([0, 0, i*360/(N_closers)]) translate([OD/2+closers[2], 0, 0]) children();
 }
 
@@ -131,14 +148,13 @@ module coord_port(i) {
 }
 
 module port_negatives(i) {
-    x_lip = sqrt((ID/2)^2 - (pID[i]/2)^2);
     // for ID
-    cylinder(h=OD/2*1.3, d=pID[i]);
+    cylinder(h=OD*0.6, d=pID[i]);
     // for flange
-    translate([0, 0, x_lip+pwall[i]]) cylinder(h=OD*.3,d=pflange[i]);
+    translate([0, 0, r_lip(i)+pwall[i]]) cylinder(h=OD*.3,d=pflange[i]);
     if (pcounterbore[i]>0) {
         // for couterbore
-        translate([0, 0, x_lip+pwall[i]-pboredepth[i]]) cylinder(h=pboredepth[i]+.1, d=pcounterbore[i]);
+        translate([0, 0, r_lip(i)+pwall[i]-pboredepth[i]]) cylinder(h=pboredepth[i]+.1, d=pcounterbore[i]);
     }
 }
 
@@ -158,7 +174,7 @@ module closer_tabs() {
         halfheight = tan(closers[3]) * (major_dia - minor_dia)/2 + closers[1];
         // build N closers in a hull with the cylinder
         hull() {
-            translate([0, 0, -halfheight]) cylinder(h=2*halfheight, d=minor_dia);
+            translate([0, 0, dz_seam-halfheight]) cylinder(h=2*halfheight, d=minor_dia);
             for (i = [0:N_closers-1]) {
                 coord_closer(i) translate([0, 0, -closers[1]]) cylinder(h=2*closers[1], d=closers[0]);
             }
@@ -178,7 +194,6 @@ module closer_negative() {
     translate([0, 0, -.05])
     neg_hardware(closer_screw, closer_nuttype, Lshaft+.05, sink=sink, capture=false);
 }
-
 
 function azzen2vec(az, zen) = [sin(zen)*cos(az), sin(zen)*sin(az), cos(zen)];
 
@@ -315,10 +330,11 @@ color(alpha=alpha) difference() {
     
     // block off top or bottom
     d_TL = OD + closers[2]*2 + closers[0] + 10;
+    translate([0, 0, dz_seam])
     if (Render==0) {
-        cylinder(h=OD/2+1, d=d_TL);
+        cylinder(h=OD/2+1-dz_seam, d=d_TL);
     } else if (Render==1) {
-        rotate([0, 180, 0]) cylinder(h=OD/2+1+dbot, d=d_TL);
+        rotate([0, 180, 0]) cylinder(h=OD/2+1+dbot+dz_seam, d=d_TL);
     }
     
     // port adapter threads
@@ -343,18 +359,9 @@ color(alpha=alpha) difference() {
     }
 }
 
-//new_bafflemaker(0);
-
-// TODO
-// x. sphere closing hardware
-//   x use hw_pocket for closing hardware
-// x. redo port orientation
-// x. port depth (thick or thin)
-// x. port interfaces
-// x mount to bench
-// x baffles
-//   x improve auto baffle heights
-// x port adapters
-//      (default to 4 screws?)
-//      
-
+// add screens if any
+for (i = [0:2]) if (screen[i]>0 && pID[i]>0) {
+    coord_port(i)
+    translate([0, 0, r_lip(i)+pwall[i]-screen[i]])
+    cylinder(h=screen[i], d=pID[i]);
+}
