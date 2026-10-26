@@ -35,8 +35,10 @@ ss_type = 2; //[2: hex, 3: square, 4: tapped]
 // length of shaft 
 ss_Lshaft = 2.5;
 
-ss_wart = 2.5;
+// height, diameter of wart for setscrew nut
+ss_wart = [2.5, 10];
 
+// access setscrew nut from side
 ss_useaccess = true;
 
 base_screw = "M4";
@@ -53,7 +55,7 @@ module _endc_() {}
 
 $fa=1;
 $fs=.2;
-ss_x = -OD/2-ss_wart;
+ss_x = -OD/2-ss_wart[0];
 
 module extruded_body() {
     linear_extrude(L, center=true) difference() {
@@ -87,10 +89,10 @@ difference() {
     macc = ss_useaccess ? L/2 : 0;
     union() {
         extruded_body();
-        if (ss_wart > 0) {
-            // setscrew wart
-            h = (OD-ID)/2+ss_wart-2*ID_tol;
-            d1 = 10;
+        if (ss_wart[0] > 0) {
+            // wart for setscrew nut
+            h = (OD-ID)/2+ss_wart[0]-2*ID_tol;
+            d1 = ss_wart[1];
             d2 = d1+h*.35*2;
             translate([ss_x, 0])
             rotate([0, 90, 0])

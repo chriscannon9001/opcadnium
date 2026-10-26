@@ -9,12 +9,15 @@
 use <MCAD/regular_shapes.scad>
 use <../hw_features.scad>
 use <../hw_pockets.scad>
-
-// [snug, close, loose, gap]
-margins = [.06, .12, .24, .35];
+use <../logo.scad>
 
 // Rendering selection
 Render = 0; //[0:Model,1:Back-only,2:Front-only,3:Inverse hardware pockets,4:Printable1,5:Printable2]
+
+with_logo = true;
+
+// [snug, close, loose, gap]
+margins = [.06, .12, .24, .35];
 
 /* [Mirror Specs] */
 
@@ -355,6 +358,11 @@ module back_plate() {
         union() {
             translate([0, -(Thick_gap + Thick_back)/2, -Overhang2/2])
                 cube([Width, Thick_back, Height+Overhang2], center=true);
+            if (with_logo) {
+                translate([0, -Thick_gap/2-Thick_back, Faces[0]/2-7])
+                rotate([90, 0, 0])
+                logo(xyscale=14);
+            }
             if (Base_Type == 0) {
                 translate([0, -Thick_gap/2-Thick_back, -Height/2-Overhang])
                     right_angle_attach();

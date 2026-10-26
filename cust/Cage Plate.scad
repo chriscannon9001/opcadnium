@@ -7,6 +7,9 @@
 
 use <../hw_features.scad>
 use <../hw_pockets.scad>
+use <../logo.scad>
+
+with_logo = true;
 
 // [snug, close, loose, gap]
 margins = [.06, .12, .24, .35];
@@ -185,6 +188,12 @@ module all_negatives() {
         translate([-Thick/2-Base_length/2+Attach_bias, 0, -Depth/2])
         translate([0, 0, -.01])
         neg_hardware(Attach_size, Attach_type, Attach_thick+.01, sink=-Base_height, washer=Attach_washer, margins=margins);
+    }
+    if (with_logo) {
+        translate([-Thick-.01, 0, Depth/2-5.5])
+        rotate([0, -90, 0])
+        rotate(-90)
+        logo(xyscale=12, h=-.4);
     }
 }
 

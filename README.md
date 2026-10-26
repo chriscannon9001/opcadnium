@@ -1,5 +1,9 @@
-# opcadnium
-OPto-CAD-nium - quick library and customizers for parametric 3d printable opto-mechanics.
+<p align="center">
+<img src="pics/opcadnium_Logo.png" alt="opcadnium logo">
+</p>
+
+<h1 align="center"> opcadnium </h1>
+Quick library and customizers for parametric 3d-printable opto-mechanics.
 
 (Formerly known as OptoSCAD.)
 
@@ -13,7 +17,7 @@ Install OpenSCAD, find your libraries folder.
 
 Clone opcadnium from git into the libraries folder. Same goes for NopSCADlib (dependency) [https://github.com/nophead/NopSCADlib](https://github.com/nophead/NopSCADlib).
 
-## Hardware Requirements
+## Shop Requirements
 
 * 3d Printer
 * stock of screws and nuts (e.g. M3, M4, M6)
@@ -24,9 +28,9 @@ Clone opcadnium from git into the libraries folder. Same goes for NopSCADlib (de
 
 ## Screenshots
 
-![Cage Plate](screenshots/opcadnium_cage_plate.png)
+![Cage Plate](pics/opcadnium_cage_plate.png)
 
-![Mirror Mount](screenshots/opcadnium_mirror_mount.png)
+![Mirror Mount](pics/opcadnium_mirror_mount.png)
 
 ## Getting started
 
@@ -42,11 +46,13 @@ Load a customizer from opcadnium/cust/*.scad in OpenSCAD to start customizing a 
 |-------------------------------|----|----|-------|--------------|
 | cust/Adapter Plates.scad        |   |   |       | |
 | cust/Adapter Right Angle.scad   |   |   |       | |
-| cust/Adapter Plate to Tube, Clamp.scad| | untested | | |
-| cust/Adapter Plate to Tube, Setscrew.scad| | untested | | |
+| cust/Adapter Plate to Tube, Clamp.scad| | | untested | |
+| cust/Adapter Plate to Tube, Setscrew.scad| | |  | |
 | cust/Post Holders.scad          | X |   |       | [thingiverse](https://www.thingiverse.com/thing:7243131) |
 | cust/Post Right Angle Clamp.scad| X |   | untested | |
+| cust/Post Right Angle Strenght.scad| X | | | |
 | cust/Cage Plate.scad            | X | X | needs work | [thingiverse](https://www.thingiverse.com/thing:7243140) |
+| cust/Fixed Mount Prism Cage.scad|   | X | untested | [thingiverse](https://www.thingiverse.com/thing:7243140) |
 | cust/Mirror Mount.scad          | X | X | also on HeNe | [thingiverse](https://www.thingiverse.com/thing:7243140) |
 | cust/Lens Mount, Focal.scad     |   | X | untested | |
 | cust/Lens Mount, XY.scad        |   |   | in planning | |
@@ -79,7 +85,7 @@ Bringing every form of opto-mech into the project would be a little ambitious. T
 
 I'm working on plans for test beds for benchmarks.
 
-***Planned :***
+***Planned Features:***
 
 * Lens Mount, XY
 * Robotics
@@ -119,7 +125,7 @@ translate([0, 7, 0]) {
 }
 ```
 
-![opcadnium demo_brief preview](screenshots/opcadnium_demo_brief_preview.png)
+![opcadnium demo_brief preview](pics/opcadnium_demo_brief_preview.png)
 
 ### More hardware lib demo
 

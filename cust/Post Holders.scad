@@ -5,6 +5,8 @@
  * Chris Cannon
  */
 
+with_logo = true;
+
 vitamins = true;
 
 // [snug, close, loose, gap]
@@ -58,6 +60,7 @@ module _end_cust_() {}
 use <../hw_pockets.scad>
 use <../hw_features.scad>
 use <../hwlookup.scad>
+use <../logo.scad>
 use <MCAD/regular_shapes.scad>
 
 $fa=1;
@@ -141,6 +144,13 @@ module base_hw() {
         OD = shaft+2*Base_chamfer;
         translate([0, 0, -.05]) slot_for_cam()
         cylinder(h=Base_chamfer+.05, d1=OD, d2=shaft);
+    }
+    // logo
+    if (with_logo && Cam>=12) {
+        y = (-OD/2-.05) * ((Hexed==1)? cos(30) : 1);
+        translate([Cam/2, y, 6])
+        rotate([90, 0, 0])
+        logo(xyscale=11.5, h=-.4);
     }
 }
 

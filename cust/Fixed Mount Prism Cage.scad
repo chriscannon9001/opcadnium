@@ -8,6 +8,9 @@
  */
 
 use <../hw_features.scad>
+use <../logo.scad>
+
+with_logo = true;
 
 // [snug, close, loose, gap]
 margins = [.06, .12, .24, .35];
@@ -21,7 +24,7 @@ ss_size = "M4";
 // nut type for prism setscrews
 ss_nuttype = 2; //[2: hex, 3: square, 4: tapped]
 
-// [x, y, z] Dimensions of prism
+// [x, y, z] nominal dimensions of prism
 prism = [12, 12, 12];
 
 // pad prism pocket along +x axis
@@ -57,8 +60,14 @@ $fs=.1;
 ss_length = max(plate[0], plate[1]);
 
 difference() {
-    // body
-    cube(plate, center=true);
+    union () {
+        // body
+        cube(plate, center=true);
+        if (with_logo) {
+            translate([0, -plate[1]/2+6, plate[2]/2])
+            logo(xyscale=12);
+        }
+    }
     // cage attachment
     rad_ss = max(plate[0], plate[1]) - cage[1] + 1;
     translate([0, 0, -plate[2]/2])

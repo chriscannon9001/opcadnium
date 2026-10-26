@@ -8,8 +8,11 @@
 use <../hw_pockets.scad>
 use <../hw_features.scad>
 use <../flexure.scad>
+use <../logo.scad>
 
 vitamins = true;
+
+with_logo = true;
 
 // [snug, close, loose, gap]
 margins = [.06, .12, .24, .35];
@@ -116,6 +119,12 @@ difference() {
             // plate2b
             linear_extrude(Flex[2])
             square([T_plate2, L_plate1], center=true);
+        }
+        if (with_logo) {
+            translate([-span/2-T_plate2, 0, 8])
+            rotate([0, -90, 0])
+            rotate(-90)
+            logo(xyscale=15);
         }
         // backing for the adjuster
         linear_extrude(Flex[2])
