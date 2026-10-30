@@ -1,6 +1,7 @@
 /* 'Post Right Angle Strength'
  * Right angle joing between posts.
- * Both posts are at 45deg to the layer lines.
+ * Both posts are at 45deg to the layer lines,
+ * this makes it a lot stronger.
  *
  * Authors:
  * Chris Cannon
@@ -21,19 +22,23 @@ Post1 = 12.7; //0.01
 // exact post diameter
 Post2 = 12.7; //0.01
 
+// tolerance of post diameter
 Tol = 0.4;
 
+// pitch between posts
 Pitch = 16.5; //0.1
 
-Outer = 24; //0.1
+// outer diameter of body
+Outer = 30; //0.1
 
-Gap = 1;
-
-Clampscrew = "M4";
-
+// length of body
 Length = 46;
 
-Typenut = 2; //[2: hex, 3: square
+// size of screw clamping each post
+Clampscrew = "M4";
+
+// type of nut for clampscrew
+Typenut = 2; //[2: hex, 3: square]
 
 Capture = true;
 
@@ -44,7 +49,7 @@ $fs=.2;
 
 module coord(s) {
     translate([s*Pitch/2, 0, 0])
-    rotate([60*s, 0, 0])
+    rotate([45*s, 0, 0])
     children();
 }
 
@@ -54,11 +59,11 @@ difference() {
     union () {
         // body
         rotate([0, 90, 0])
-        rotate(30)
-        cylinder(h=Length, d=Outer/cos(30), center=true, $fn=6);
+        rotate(22.5)
+        cylinder(h=Length, d=Outer/cos(22.5), center=true, $fn=8);
         // logo
         if (with_logo) {
-            xys = min(14, Outer*tan(30));
+            xys = min(14, Outer*tan(22.5));
             translate([0, 0, Outer/2])
             if (xys >= 12)
                 logo(xyscale=xys);
@@ -78,11 +83,11 @@ difference() {
             translate([s*Pitch/2, 0, 0])
             rotate([0, s*90, 0])
             rotate(rz+180)
-            neg_hex(Clampscrew, bore/2+Tol+Lshaft, capture=Capture, minor_access=Outer/2+.5, plate=plate);
+            neg_hardware(Clampscrew, Typenut, bore/2+Tol+Lshaft, capture=Capture, minor_access=Outer/2+.5, plate=plate, margins=margins);
         } else {
             translate([s*Length/2, 0, 0])
             rotate([0, -s*90, 0])
-            neg_hex(Clampscrew, Lshaft, sink=bore/2, plate=plate);
+            neg_hardware(Clampscrew, Typenut, Lshaft, sink=bore/2, plate=plate, margins=margins);
         }
     }
 }
