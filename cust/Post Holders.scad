@@ -110,7 +110,7 @@ module body() {
         //translate([0, 0, 6]) cylinder(h=Height, d=rID);
         translate([0, 0, 6])
         linear_extrude(Height)
-        sketch_precision_bore(ID, ID_tol, 180);
+        sketch_precision_bore(ID, ID_tol, 180+lockscreworientation);
         // stabilizing bore relief
         //translate([rID/4+margins[3], 0, 6]) linear_extrude(Height) square([rID/2,rID*.5], center=true);
     }
