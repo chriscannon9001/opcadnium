@@ -9,7 +9,7 @@ use <../hw_pockets.scad>
 // [snug, close, loose, gap]
 margins = [.06, .12, .24, .35];
 
-// text like "M2.5", "M4" for metric, "I4", "I1/4" for imperial
+// text eg "M2.5", "M4", "I4", "I1/4" or "cust1x3x2"
 size = "M5";
 
 // type of hardware

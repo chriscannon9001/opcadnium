@@ -7,6 +7,7 @@
  * Chris Cannon
  */
 
+include <BOSL2/std.scad>
 
 // screw sizing format
 // ["key", OD_shaft, [OD_wash, H_wash], [ODmin_hex, H_hex], [OD_shc, H_shc], [OD_bhc, H_bhc], [ODmin_squ, H_squ], OD_flathead]
@@ -25,28 +26,63 @@ _I10 = ["I10", 4.83, [12.7, 1.24], [9.53, 3.3], [7.92, 4.83], [9.17, 2.57], [0, 
 _Iq = ["I1/4", 6.35, [15.88, 1.65], [11.13, 4.9], [9.53, 6.35], [11.1, 3.35], [12.7, 6.35], 0];
 HW_IDX = [_M2, _M2_5, _M3, _M4, _M5, _M6, _M8, _I2, _I4, _I6, _I8, _I10, _Iq];
 
-/*for (idx = ["M2", "M2.5", "M3", "M4", "M5", "M6", "M8", "I2", "I4", "I6", "I8", "I1/4"]) {
-    I = search([idx], HW_IDX, num_returns_per_match=1);
-    spec = HW_IDX[I[0]];
-    echo(len(spec), spec);
-}*/
+// concat array of char; needed for strslice
+function rejoin(parts, sep="", limit = undef) =
+  let(n = is_undef(limit) ? len(parts) : limit)
+    n == 0 ? "" :
+    n == 1 ? parts[n-1] : 
+    str(rejoin(parts, sep, n-1), sep, parts[n-1]);
 
-function hw_getspec(size) = HW_IDX[(search([size], HW_IDX, num_returns_per_match=1))[0]];
+// works like substr in BOSL2
+function strslice(a, begin, end) =
+    rejoin([for (i = [begin:end]) a[i]]);
 
+// works like starts_with in BOSL2
+function leftcomp(a, b) =
+    a == (strslice(b, 0, len(a)-1));
+
+// if user calls a custom screw spec
+// this is how they're parsed (requires BOSL2)
+function cust_spec(size) =
+    let(tmp = str_split(
+        substr(size, 4, len(size)-1), "x"))
+    let(shaft=parse_float(tmp[0]),
+        d=parse_float(tmp[1]),
+        t=parse_float(tmp[2]))
+        ["cust", shaft, [d, t], [d, t], [d, t], [d, t], [d, t], d];
+
+// given a string like "M4" or "cust2x5x2", return
+// an array with all the standard sizing specs
+function hw_getspec(size) = 
+    let(is_cust = leftcomp("cust", size))
+        // if custom then pase the string
+        is_cust ? cust_spec(size) :
+        // otherwise lookup size in table
+        HW_IDX[(search([size], HW_IDX, num_returns_per_match=1))[0]];
+
+// given spec array, get the shaft major dia
 function hw_shaft(spec) = spec[1];
 
+// given spec array, get [od, thick] of washer
 function hw_washer(spec) = spec[2];
 
+// given spec array, get [od_minor, thick] of hex nut
 function hw_hex(spec) = spec[3];
 
+// given spec array, get [OD, thick] of SHC
 function hw_shc(spec) = spec[4];
 
+// given spec array, get [OD, thick] of BHC
 function hw_bhc(spec) = spec[5];
 
+// given spec array, get [od_minor, thick] of square nut
 function hw_squ(spec) = spec[6];
 
+// given spec array, get dia of flathead
 function hw_flathead(spec) = spec[7];
 
+// given a spec array, find [OD, thick] large enough
+// to fit any head or nut(minor)
 function hw_envelope(spec) = 
     [max([for (i=[2:6]) spec[i][0]]),
         max([for (i=[2:6]) spec[i][1]])];

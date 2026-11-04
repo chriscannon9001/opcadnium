@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center"> opcadnium </h1>
-Quick library and customizers for parametric 3d-printable opto-mechanics.
+Library 3d-printable opto-mechanics, with quick parametric customizers.
 
 (Formerly known as OptoSCAD.)
 
@@ -15,13 +15,17 @@ This project is about opto-mech as fast and cheap as it can reasonably be.
 
 Install OpenSCAD, find your libraries folder.
 
-Clone opcadnium from git into the libraries folder. Same goes for NopSCADlib (dependency) [https://github.com/nophead/NopSCADlib](https://github.com/nophead/NopSCADlib).
+Clone opcadnium from git into the libraries folder. Same goes for dependencies:
+
+* NopSCADlib [https://github.com/nophead/NopSCADlib](https://github.com/nophead/NopSCADlib) (esp. used to render springs).
+* BOSL2 [https://github.com/BelfrySCAD/BOSL2](https://github.com/BelfrySCAD/BOSL2) (esp. used to parse custom size strings)
 
 ## Shop Requirements
 
 * 3d Printer
 * stock of screws and nuts (e.g. M3, M4, M6)
 * stock of springs (e.g. 6x20x.4 mm and 8x20x.8mm)
+* heat gun (clear strings before you use prints with optics)
 * (optional) chop saw
 * (optional) metal stock, e.g. 6mm dia rod (for cages) and 12.7mm dia rod or tubes (for posts) 
 * (optional) drill press and taps, i.e. for threading solid rod posts (not required)
@@ -92,7 +96,7 @@ I'm working on plans for test beds for benchmarks.
 
 ## Hardware Library
 
-There are other hardware libraries out there already, but opcadnium includes its own hardware library. Why?
+There are other hardware libraries out there already, but opcadnium mainly relies on its own hardware library.
 
 * [low level] Form negatives (pockets) for trapping nuts, counterboring screws, and allow quickly swapping metric and imperial types.
 * [higher level] Form screw/spring adjuster sets, collar clamps, and more
