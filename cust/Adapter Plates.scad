@@ -26,10 +26,10 @@ pitch_top = 20.5;
 N_top = [0, 0];
 size_top = "M4";
 Bshaft_top = 0.8;
-type_top = 2; //[0: SHC, 1: BHC, 2: hex, 3: square, 4: tapped, 5: flathead, 6: custom]
+type_top = 2; //[0: SHC, 1: BHC, 2: hex, 3: square, 4: tapped, 5: flathead]
 washer_top = false;
 capture_top = false;
-// for hex or square, also the exact bore diameter for custom type
+// for hex or square
 minor_access_top = 0; //.01
 TLshaft_top = 8;
 
@@ -39,10 +39,10 @@ pitch_bot = 25.4;
 N_bot = [0, 0];
 size_bot = "M3";
 Bshaft_bot = 1.4;
-type_bot = 1; //[0: SHC, 1: BHC, 2: hex, 3: square, 4: tapped, 5: flathead, 6: custom]
+type_bot = 1; //[0: SHC, 1: BHC, 2: hex, 3: square, 4: tapped, 5: flathead]
 washer_bot = false;
 capture_bot = false;
-// for hex or square, also the exact bore diameter for custom type
+// for hex or square
 minor_access_bot = 0; //.01
 TLshaft_bot = 8;
 

@@ -23,7 +23,7 @@ Depth = 50;
 
 Length = 52;
 
-Thick = 11.5;
+Thick = 11.5; //0.1
 
 // [rod, oncenter, AOI, ID]
 main_cage = [6.35, 30, 0, 25];
@@ -52,14 +52,19 @@ Attach_bias = -1.5;
 
 /* [Angle Plate] */
 
-angleplate = 1; //[0:None, 1: Right, 2: Left]
+angleplate = 1; //[0:None, 1: Right, 2: Left, 3: Both]
 
 Length2 = 52;
+
+Thick2 = 11.5; //0.1
 
 // 0 = right angle between plates
 Angle = 0;
 
 Chamfer = 12;
+
+// truncate length of angle plate
+L2_Cutback = 0;
 
 // [rod, oncenter, AOI, ID]
 right_cage = [6.35, 30, 0, 25];
@@ -94,22 +99,24 @@ Clamp_L_jaw = Clamp_jaw_dims[0];
 Clamp_W_jaw = Clamp_jaw_dims[1];
 Clamp_gap = Clamp_jaw_dims[2];
 
+
+// rotate x,y by Angle, then add dx,dy
 function rotation(x, y, dx=0, dy=0)
     = [sqrt(x^2+y^2)*cos(atan2(y,x)+Angle)+dx,
        sqrt(x^2+y^2)*sin(atan2(y,x)+Angle)+dy];
 
 module coord_angleplate() {
-    if (angleplate==0) {
-    } else if (angleplate==1) {
+    if (angleplate==1 || angleplate==3) {
         translate([0, Length/2])
         rotate(Angle)
-        translate([Length2/2, Thick+.05])
+        translate([Length2/2, Thick2+.05])
         rotate([90, 0, 0])
         children();
-    } else if (angleplate==2) {
+    }
+    if (angleplate==2 || angleplate==3) {
         translate([0, -Length/2])
         rotate(Angle)
-        translate([Length2/2, -Thick-.05])
+        translate([Length2/2, -Thick2-.05])
         rotate([-90, 0, 0])
         children();
     }
@@ -129,24 +136,26 @@ module body() {
     m3 = [0, Length/2];
     m4 = [-Thick, Length/2];
     linear_extrude(Depth, center=true)
-    if (angleplate==0) {
+    union() {
         polygon([m1, m2, m3, m4]);
-    } else if (angleplate==1) {
-        // angle plate on right side
-        c1 = [0, Length/2-Chamfer];
-        c2 = rotation(Chamfer, 0, dy=Length/2);
-        r1 = rotation(Length2, 0, dy=Length/2);
-        r2 = rotation(Length2, Thick, dy=Length/2);
-        r3 = rotation(0, Thick, dy=Length/2);
-        polygon([c1, c2, r1, r2, r3, m4, m1, m2]);
-    } else if (angleplate==2) {
-        // angle plate on left side
-        c1 = [0, -Length/2+Chamfer];
-        c2 = rotation(Chamfer, 0, dy=-Length/2);
-        r1 = rotation(Length2, 0, dy=-Length/2);
-        r2 = rotation(Length2, -Thick, dy=-Length/2);
-        r3 = rotation(0, -Thick, dy=-Length/2);
-        polygon([c1, c2, r1, r2, r3, m1, m4, m3]);
+        if (angleplate==1 || angleplate==3) {
+            // angle plate on right side
+            c1 = [0, Length/2-Chamfer];
+            c2 = rotation(Chamfer, 0, dy=Length/2);
+            r1 = rotation(Length2-L2_Cutback, 0, dy=Length/2);
+            r2 = rotation(Length2-L2_Cutback, Thick2, dy=Length/2);
+            r3 = rotation(0, Thick2, dy=Length/2);
+            polygon([c1, c2, r1, r2, r3, m4]);
+        }
+        if (angleplate==2 || angleplate==3) {
+            // angle plate on left side
+            c1 = [0, -Length/2+Chamfer];
+            c2 = rotation(Chamfer, 0, dy=-Length/2);
+            r1 = rotation(Length2-L2_Cutback, 0, dy=-Length/2);
+            r2 = rotation(Length2-L2_Cutback, -Thick2, dy=-Length/2);
+            r3 = rotation(0, -Thick2, dy=-Length/2);
+            polygon([c1, c2, r1, r2, r3, m1]);
+        }
     }
     if (base_attach==2) {
         // collar clamp type of base attachment
@@ -165,7 +174,7 @@ module all_negatives() {
     translate([-Thick-.05, 0])
     rotate([0, 90, 0]) rotate(90) {
         // main cage
-        neg_cage1(main_cage[0], main_cage[1], Thick+.1, setscrew, rad_ss, ss_angle=-1,  ss_nut_type=nuttype, AOI=main_cage[2], margins=margins, topaccess=true, overhead=ohead, overbore=0, fast=true);
+        neg_cage1(main_cage[0], main_cage[1], Thick+.1, setscrew, rad_ss, ss_angle=-1,  ss_nut_type=nuttype, AOI=main_cage[2], margins=margins, overhead=ohead, overbore=0, fast=true);
         // main ID passthrough
         translate([0, 0, -Base_length])
         cylinder(h=Thick+.1+ohead+Base_length, d=main_cage[3]);
@@ -179,7 +188,7 @@ module all_negatives() {
     coord_angleplate() {
         // cage
         rad_ss = (Depth - right_cage[1])/2 + 1;
-        neg_cage1(right_cage[0], right_cage[1], Thick+.1, setscrew, rad_ss, ss_angle=-1,  ss_nut_type=nuttype, AOI=right_cage[2], margins=margins, overhead=ohead, overbore=0, fast=true);
+        neg_cage1(right_cage[0], right_cage[1], Thick2+.1, setscrew, rad_ss, ss_angle=-1,  ss_nut_type=nuttype, AOI=right_cage[2], margins=margins, overhead=ohead, overbore=0, fast=true);
         // passthrough
         cylinder(h=Thick+.1+ohead, d=right_cage[3]);
     }

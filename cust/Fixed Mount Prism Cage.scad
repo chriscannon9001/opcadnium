@@ -39,6 +39,12 @@ xborepath = true;
 // bore a path for beam along -y
 yborepath = false;
 
+// if >0, override auto ID of bore-paths
+ID_bore = 0;
+
+// baffles in bore-paths: [radial, pitch]
+bore_baffles = [0.9, 3]; //0.1
+
 // [rod, oncenter, AOI]
 cage = [6.35, 30, 0];
 
@@ -64,7 +70,8 @@ difference() {
         // body
         cube(plate, center=true);
         if (with_logo) {
-            translate([0, -plate[1]/2+6, plate[2]/2])
+            translate([-plate[0]/2, -plate[1]/2+6, 0])
+            rotate([0, -90, 0])
             logo(xyscale=12);
         }
     }
@@ -75,13 +82,21 @@ difference() {
     // prism mount
     neg_prismmount(prism, plate[2], xpad, ypad, ss_length, ss_size, ss_nuttype=ss_nuttype, margins=margins);
     // bore paths
+    d_maj = (ID_bore>0)? ID_bore : prism[2]-0.8;
+    d_min = d_maj - 2*bore_baffles[0];
     if (xborepath) {
+        h = (plate[0] - prism[0])/2;
+        translate([-prism[0]/2, 0])
         rotate([0, -90, 0])
-        cylinder(h=plate[0]/2+1, d=prism[2]-.8);
+        //cylinder(h=plate[0]/2+1, d=bore);
+        neg_cyl_baffled(h, d_min, d_maj, bore_baffles[1]);
     }
     if (yborepath) {
+        h = (plate[1] - prism[1])/2;
+        translate([0, -prism[1]/2])
         rotate([90, 0, 0])
-        cylinder(h=plate[1]/2+1, d=prism[2]-.8);
+        //cylinder(h=h, d=d_maj);
+        neg_cyl_baffled(h, d_min, d_maj, bore_baffles[1]);
     }
 }
 

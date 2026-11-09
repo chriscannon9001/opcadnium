@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center"> opcadnium </h1>
-Library 3d-printable opto-mechanics, with quick parametric customizers.
+Library of 3d-printable opto-mechanics, with quick parametric customizers.
 
 (Formerly known as OptoSCAD.)
 
@@ -25,7 +25,7 @@ Clone opcadnium from git into the libraries folder. Same goes for dependencies:
 * 3d Printer
 * stock of screws and nuts (e.g. M3, M4, M6)
 * stock of springs (e.g. 6x20x.4 mm and 8x20x.8mm)
-* heat gun (clear strings before you use prints with optics)
+* heat gun (help clean up strings before using with sensitive optics)
 * (optional) chop saw
 * (optional) metal stock, e.g. 6mm dia rod (for cages) and 12.7mm dia rod or tubes (for posts) 
 * (optional) drill press and taps, i.e. for threading solid rod posts (not required)
@@ -55,7 +55,8 @@ Load a customizer from opcadnium/cust/*.scad in OpenSCAD to start customizing a 
 | cust/Post Holders.scad          | X |   |       | [thingiverse](https://www.thingiverse.com/thing:7243131) |
 | cust/Post Right Angle Clamp.scad| X |   | untested | |
 | cust/Post Right Angle Strenght.scad| X | | | |
-| cust/Cage Plate.scad            | X | X | needs work | [thingiverse](https://www.thingiverse.com/thing:7243140) |
+| cust/Cage Plate.scad            | X | X |  | [thingiverse](https://www.thingiverse.com/thing:7243140) |
+| cust/Cage Baffle.scad           |   | X |  |  |
 | cust/Fixed Mount Prism Cage.scad|   | X | untested | [thingiverse](https://www.thingiverse.com/thing:7243140) |
 | cust/Mirror Mount.scad          | X | X | also on HeNe | [thingiverse](https://www.thingiverse.com/thing:7243140) |
 | cust/Lens Mount, Focal.scad     |   | X | untested | |

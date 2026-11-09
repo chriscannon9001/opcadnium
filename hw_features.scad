@@ -366,3 +366,35 @@ module fastener_array(even, pitch, sizespec, N, L, W) {
         translate([x, y]) children();
     }
 }
+
+// Periodic baffles to reduce reflections
+// on the inside of a cylinder.
+// (For metal parts, a machinist would use a thread)
+// h - height
+// d_minor - minor diameter
+// d_major - major diameter
+// pitch - nom spacing between baffles (will be rounded)
+// slope - (default 1.2) slope of baffles
+// edge - (default 0.4) flat edge on each baffle
+module neg_cyl_baffled(h, d_minor, d_major, pitch, slope=1.2, edge=0.4) {
+    N = max(2, round(h / pitch));
+    dz = h / (N-1);
+    dz_run = (d_major-d_minor)/slope/2;
+    union() {
+        translate([0, 0, -.05])
+        cylinder(h=h+.1, d=d_minor);
+        for (i=[1:N-1]) {
+            e1 = (i==1)? edge : 0.5*edge;
+            e2 = (i==(N-1))? edge : 0.5*edge;
+            dz_sm = dz - 2*dz_run - e1 - e2;
+            z1 = (i-1)*dz + e1;
+            z2 = i*dz - dz_run - e2;
+            translate([0, 0, z1])
+            cylinder(h=dz_run, d1=d_minor, d2=d_major);
+            translate([0, 0, z1+dz_run])
+            cylinder(h=dz_sm, d=d_major);
+            translate([0, 0, z2])
+            cylinder(h=dz_run, d1=d_major, d2=d_minor);
+        }
+    }
+}
