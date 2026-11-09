@@ -39,8 +39,18 @@ fastcagepreview = true;
 module body() {
     union() {
         cube(plate, center=true);
-        if (tube[0]>0 && tube[1]>0) {
-            // tube extension
+        // logo
+        h = min(13, (plate[1] - tube[0])/2);
+        y = -plate[1]/2 + h/2;
+        if (with_logo && h>7.5) {
+            translate([0, y, plate[2]/2])
+            if (h>=11.5)
+                logo(xyscale=h);
+            else
+                logo_small(xyscale=h);
+        }
+        // tube extension
+        if (tube[1]>0) {
             translate([0, 0, plate[2]/2]);
             cylinder(h=tube[1], d=tube[0]);
         }
