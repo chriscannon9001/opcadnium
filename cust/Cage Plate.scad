@@ -50,6 +50,12 @@ Attach_thick = 2;
 // Move attachment hardware from the center of the right angle
 Attach_bias = -1.5;
 
+// For nuts, access from the side
+Attach_access = false;
+
+// Cone pocket under the fastener to spread pressure
+Attach_stancecone = 1.5;
+
 /* [Angle Plate] */
 
 angleplate = 1; //[0:None, 1: Right, 2: Left, 3: Both]
@@ -65,6 +71,9 @@ Chamfer = 12;
 
 // truncate length of angle plate
 L2_Cutback = 0;
+
+// offset y position of angle plate
+dy_angleplate = 0; //0.1
 
 // [rod, oncenter, AOI, ID]
 right_cage = [6.35, 30, 0, 25];
@@ -107,14 +116,14 @@ function rotation(x, y, dx=0, dy=0)
 
 module coord_angleplate() {
     if (angleplate==1 || angleplate==3) {
-        translate([0, Length/2])
+        translate([0, Length/2+dy_angleplate])
         rotate(Angle)
         translate([Length2/2, Thick2+.05])
         rotate([90, 0, 0])
         children();
     }
     if (angleplate==2 || angleplate==3) {
-        translate([0, -Length/2])
+        translate([0, -Length/2-dy_angleplate])
         rotate(Angle)
         translate([Length2/2, -Thick2-.05])
         rotate([-90, 0, 0])
@@ -141,19 +150,19 @@ module body() {
         if (angleplate==1 || angleplate==3) {
             // angle plate on right side
             c1 = [0, Length/2-Chamfer];
-            c2 = rotation(Chamfer, 0, dy=Length/2);
-            r1 = rotation(Length2-L2_Cutback, 0, dy=Length/2);
-            r2 = rotation(Length2-L2_Cutback, Thick2, dy=Length/2);
-            r3 = rotation(0, Thick2, dy=Length/2);
+            c2 = rotation(Chamfer, 0, dy=Length/2+dy_angleplate);
+            r1 = rotation(Length2-L2_Cutback, 0, dy=Length/2+dy_angleplate);
+            r2 = rotation(Length2-L2_Cutback, Thick2, dy=Length/2+dy_angleplate);
+            r3 = rotation(0, Thick2, dy=Length/2+dy_angleplate);
             polygon([c1, c2, r1, r2, r3, m4]);
         }
         if (angleplate==2 || angleplate==3) {
             // angle plate on left side
             c1 = [0, -Length/2+Chamfer];
-            c2 = rotation(Chamfer, 0, dy=-Length/2);
-            r1 = rotation(Length2-L2_Cutback, 0, dy=-Length/2);
-            r2 = rotation(Length2-L2_Cutback, -Thick2, dy=-Length/2);
-            r3 = rotation(0, -Thick2, dy=-Length/2);
+            c2 = rotation(Chamfer, 0, dy=-Length/2-dy_angleplate);
+            r1 = rotation(Length2-L2_Cutback, 0, dy=-Length/2-dy_angleplate);
+            r2 = rotation(Length2-L2_Cutback, -Thick2, dy=-Length/2-dy_angleplate);
+            r3 = rotation(0, -Thick2, dy=-Length/2-dy_angleplate);
             polygon([c1, c2, r1, r2, r3, m1]);
         }
     }
@@ -174,29 +183,31 @@ module all_negatives() {
     translate([-Thick-.05, 0])
     rotate([0, 90, 0]) rotate(90) {
         // main cage
-        neg_cage1(main_cage[0], main_cage[1], Thick+.1, setscrew, rad_ss, ss_angle=-1,  ss_nut_type=nuttype, AOI=main_cage[2], margins=margins, overhead=ohead, overbore=0, fast=true);
+        neg_cage1(main_cage[0], main_cage[1], Thick+.1, setscrew, rad_ss, ss_angle=-1,  ss_nut_type=nuttype, AOI=main_cage[2], margins=margins, overhead=ohead, overbore=2*margins[3], fast=true);
         // main ID passthrough
         translate([0, 0, -Base_length])
         cylinder(h=Thick+.1+ohead+Base_length, d=main_cage[3]);
         if (with_secondary_cage) {
             // secondary cage
             rad_ss = (Depth - sec_cage[1])/2 + 1;
-            neg_cage1(sec_cage[0], sec_cage[1], Thick+.1, setscrew, rad_ss, ss_angle=-1,  ss_nut_type=nuttype, AOI=sec_cage[2], margins=margins, topaccess=true, overhead=ohead, overbore=0, fast=true);
+            neg_cage1(sec_cage[0], sec_cage[1], Thick+.1, setscrew, rad_ss, ss_angle=-1,  ss_nut_type=nuttype, AOI=sec_cage[2], margins=margins, topaccess=true, overhead=ohead, overbore=2*margins[3], fast=true);
         }
     }
     // for angle plate
     coord_angleplate() {
         // cage
         rad_ss = (Depth - right_cage[1])/2 + 1;
-        neg_cage1(right_cage[0], right_cage[1], Thick2+.1, setscrew, rad_ss, ss_angle=-1,  ss_nut_type=nuttype, AOI=right_cage[2], margins=margins, overhead=ohead, overbore=0, fast=true);
+        neg_cage1(right_cage[0], right_cage[1], Thick2+.1, setscrew, rad_ss, ss_angle=-1,  ss_nut_type=nuttype, AOI=right_cage[2], margins=margins, overhead=ohead, overbore=2*margins[3], fast=true);
         // passthrough
         cylinder(h=Thick+.1+ohead, d=right_cage[3]);
     }
     if (base_attach==1) {
+        macc = Attach_access? Attach_bias+RA_base_dimensions[0] : 0;
         // right angle attachment hardware
         translate([-Thick/2-Base_length/2+Attach_bias, 0, -Depth/2])
         translate([0, 0, -.01])
-        neg_hardware(Attach_size, Attach_type, Attach_thick+.01, sink=-Base_height, washer=Attach_washer, margins=margins);
+        rotate(180)
+        neg_hardware(Attach_size, Attach_type, Attach_thick+.01, sink=-Base_height, washer=Attach_washer, stancecone=Attach_stancecone, capture=Attach_access, minor_access=macc, margins=margins);
     }
     if (with_logo) {
         translate([-Thick-.01, 0, Depth/2-5.5])

@@ -59,7 +59,7 @@ Load a customizer from opcadnium/cust/*.scad in OpenSCAD to start customizing a 
 | cust/Cage Baffle.scad           |   | X |  |  |
 | cust/Fixed Mount Prism Cage.scad|   | X | untested | [thingiverse](https://www.thingiverse.com/thing:7243140) |
 | cust/Mirror Mount.scad          | X | X | also on HeNe | [thingiverse](https://www.thingiverse.com/thing:7243140) |
-| cust/Lens Mount, Focal.scad     |   | X | untested | |
+| cust/Lens Mount, Focal.scad     | X | X | untested | |
 | cust/Lens Mount, XY.scad        |   |   | in planning | |
 | cust/Integrating Sphere.scad    | X | X | untested | |
 

@@ -337,7 +337,7 @@ module neg_cage1(rod, oncenter, depth, setscrew, rad_setscrew, overhead=0, overb
         y = diag * sin(theta);
         ss_theta = is_ud? (floor(theta/180)*180+90) : theta+ss_angle;
         translate([x, y, depth/2]) {
-            cylinder_wAOI(depth, rod+2*margins[0], AOI, center=true, fast=fast||abs(AOI)<1, precision=true, rotation=ss_theta);
+            cylinder_wAOI(depth, rod+2*margins[0], AOI, center=true, fast=fast||abs(AOI)<1, precision=true, rotation=ss_theta, margins=margins);
             rotate(ss_theta)
             rotate([0, 90, 0])
             rotate(r_z)
@@ -345,7 +345,7 @@ module neg_cage1(rod, oncenter, depth, setscrew, rad_setscrew, overhead=0, overb
             if (overhead>0) {
                 dx = depth*tan(AOI)/2;
                 translate([dx, 0, depth/2-.05])
-                cylinder_wAOI(overhead+.05, rod+overbore, AOI, center=false, fast=fast||abs(AOI)<1);
+                cylinder_wAOI(overhead+.05, rod+overbore, AOI, center=false, fast=fast||abs(AOI)<1, margins=margins);
             }
         }
     }

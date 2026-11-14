@@ -70,8 +70,8 @@ difference() {
         // body
         cube(plate, center=true);
         if (with_logo) {
-            translate([-plate[0]/2, -plate[1]/2+6, 0])
-            rotate([0, -90, 0])
+            translate([plate[0]/2, -plate[1]/2+6, 0])
+            rotate([0, 90, 0])
             logo(xyscale=12);
         }
     }
