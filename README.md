@@ -23,9 +23,14 @@ Clone opcadnium from git into the libraries folder. Same goes for dependencies:
 ## Shop Requirements
 
 * 3d Printer
-* stock of screws and nuts (e.g. M3, M4, M6)
-* stock of springs (e.g. 6x20x.4 mm and 8x20x.8mm)
-* heat gun (help clean up strings before using with sensitive optics)
+* harware
+    * general: stock of screws and nuts (e.g. M3, M4, M6)
+    * esp. for cages: quantity of M3x6 setscrews and M3 square nuts
+    * esp. for post holders: M5x20
+    * for actuators: springs (e.g. 6x20x.4mm and 8x20x.8mm)
+    * for actuators: SHC M3x16, M3x20, M3x25
+    * for post holders: thumb-screw M5x12, M5x16
+* heat gun (helps clean up stringing if optical surfaces are sensitive)
 * (optional) chop saw
 * (optional) metal stock, e.g. 6mm dia rod (for cages) and 12.7mm dia rod or tubes (for posts) 
 * (optional) drill press and taps, i.e. for threading solid rod posts (not required)
@@ -57,6 +62,7 @@ Load a customizer from opcadnium/cust/*.scad in OpenSCAD to start customizing a 
 | cust/Post Right Angle Strenght.scad| X | | | |
 | cust/Cage Plate.scad            | X | X |  | [thingiverse](https://www.thingiverse.com/thing:7243140) |
 | cust/Cage Baffle.scad           |   | X |  |  |
+| cust/Cage to Internal Thread.scad|  | X |  |  |
 | cust/Fixed Mount Prism Cage.scad|   | X | untested | [thingiverse](https://www.thingiverse.com/thing:7243140) |
 | cust/Mirror Mount.scad          | X | X | also on HeNe | [thingiverse](https://www.thingiverse.com/thing:7243140) |
 | cust/Lens Mount, Focal.scad     | X | X | untested | |

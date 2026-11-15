@@ -202,9 +202,9 @@ module all_negatives() {
         cylinder(h=Thick+.1+ohead, d=right_cage[3]);
     }
     if (base_attach==1) {
-        macc = Attach_access? Attach_bias+RA_base_dimensions[0] : 0;
+        macc = Attach_access? Base_length/2-Attach_bias : 0;
         // right angle attachment hardware
-        translate([-Thick/2-Base_length/2+Attach_bias, 0, -Depth/2])
+        translate([-Thick-Base_length/2-Attach_bias, 0, -Depth/2])
         translate([0, 0, -.01])
         rotate(180)
         neg_hardware(Attach_size, Attach_type, Attach_thick+.01, sink=-Base_height, washer=Attach_washer, stancecone=Attach_stancecone, capture=Attach_access, minor_access=macc, margins=margins);

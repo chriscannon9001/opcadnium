@@ -23,7 +23,7 @@ skip_cage = false;
 
 Cage_setscrew = "M3";
 
-Cage_nuttype = 2; //[2: hex, 3: square, 4: tapped]
+Cage_nuttype = 3; //[2: hex, 3: square, 4: tapped]
 
 // depth of plate1 for cage
 D_plate1 = 44;
@@ -118,8 +118,8 @@ Attach_size = "M4";
 // Thickness under base attach hardware
 Attach_thick = 2.5; //0.1
 
-// Move attachment hardware from the center of the right angle
-Attach_bias = 0.5; //0.1
+// Move attachment hardware from the center of RA_base
+Attach_bias = -0.5; //0.1
 
 // For nuts, access from the side
 Attach_access = false;
@@ -241,8 +241,8 @@ difference() {
     neg_adjuster_screwnutspring(Screw_dz, Spring_spec, typehead=0, typenut=Nuttype_dz, washer=true, l_compressed=compressedLength, support_thick=Supportthick_dz, access_length=10, overhead=10, margins=margins);
     // right angle attachment hardware
     if (base_attach==1) {
-        macc = Attach_access? Attach_bias+RA_base_dimensions[0] : 0;
-        translate([span/2+T_plate1-Attach_bias, 0, 0])
+        macc = Attach_access? Base_length/2-Attach_bias : 0;
+        translate([span/2+T_plate1+Base_length/2+Attach_bias, 0, 0])
         translate([0, 0, -.01])
         neg_hardware(Attach_size, Attach_type, Attach_thick+.01, sink=-Base_height, washer=Attach_washer, stancecone=Attach_stancecone, capture=Attach_access, minor_access=macc, margins=margins);
     }

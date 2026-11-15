@@ -25,7 +25,7 @@ plate = [46, 54, 12];
 
 cage_ss = "M3";
 
-cage_nut = 2; //[2: hex, 3:square, 4: tapped]
+cage_nut = 3; //[2: hex, 3:square, 4: tapped]
 
 module body() {
     H_plate = plate[2];
